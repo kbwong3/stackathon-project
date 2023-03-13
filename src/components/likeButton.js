@@ -37,17 +37,7 @@ export const LikeButton = (props) => {
 
   const handleLike = async (id) => {
     try {
-      setIsLiked(!isLiked);
-
       if (isLiked) {
-        setTotalLikes(totalLikes + 1);
-        await updateDoc(userRef, {
-          likedPosts: arrayUnion(id),
-        });
-        await updateDoc(postRef, {
-          likes: totalLikes,
-        });
-      } else {
         setTotalLikes(totalLikes - 1);
         await updateDoc(userRef, {
           likedPosts: arrayRemove(id),
@@ -55,8 +45,17 @@ export const LikeButton = (props) => {
         await updateDoc(postRef, {
           likes: totalLikes,
         });
+      } else {
+        setTotalLikes(totalLikes + 1);
+        await updateDoc(userRef, {
+          likedPosts: arrayUnion(id),
+        });
+        await updateDoc(postRef, {
+          likes: totalLikes,
+        });
       }
 
+      setIsLiked(!isLiked);
       getPostList();
     } catch (error) {
       console.error(error);
