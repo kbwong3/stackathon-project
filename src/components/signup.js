@@ -94,11 +94,10 @@ export const Signup = () => {
                   type="password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Link to="/">
-                  <Button className="mt-4" type="submit">
-                    Sign up
-                  </Button>
-                </Link>
+
+                <Button className="mt-4" type="submit">
+                  Sign up
+                </Button>
               </Form.Group>
             </Form>
           </Col>
