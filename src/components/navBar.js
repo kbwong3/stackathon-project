@@ -12,10 +12,8 @@ export const NavigationBar = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(!isLoggedIn);
-        console.log("user logged in!", user);
       } else {
         setIsLoggedIn(false);
-        console.log("no user", user);
       }
     });
   }, []);

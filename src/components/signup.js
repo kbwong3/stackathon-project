@@ -1,17 +1,38 @@
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { authErrors } from "./authErrors";
+import { setDoc, doc } from "firebase/firestore";
 
 export const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState("");
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (auth.currentUser.displayName) {
+        setUser(auth.currentUser.displayName);
+      } else {
+        setUser("Anonymous");
+      }
+
+      const userRef = doc(db, "users", userCredential.user.uid);
+
+      await setDoc(userRef, {
+        name: user,
+        email: email,
+        likedPosts: [],
+        userId: auth.currentUser.uid,
+      });
+
       toast.success(
         auth.currentUser.displayName
           ? `Welcome ${auth.currentUser.displayName}!`

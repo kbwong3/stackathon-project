@@ -1,22 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth, db } from "../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 export const CreatePost = (props) => {
   const [post, setPost] = useState("");
   const [mood, setMood] = useState(3);
-  const [user, setUser] = useState("");
   const getPostList = props.getPostList;
 
   const postCollectionRef = collection(db, "post");
-
-  useEffect(() => {
-    if (auth.currentUser.displayName) {
-      setUser(auth.currentUser.displayName);
-    } else {
-      setUser("Anonymous");
-    }
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,8 +15,9 @@ export const CreatePost = (props) => {
       await addDoc(postCollectionRef, {
         post: post,
         mood: mood,
-        user: user,
+        user: auth.currentUser.displayName,
         userId: auth.currentUser?.uid,
+        likes: 0,
       });
       getPostList();
       setPost("");

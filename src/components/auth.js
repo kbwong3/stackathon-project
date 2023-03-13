@@ -1,8 +1,9 @@
-import { auth, googleProvider } from "../config/firebase";
+import { auth, googleProvider, db } from "../config/firebase";
 import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { authErrors } from "./authErrors";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 
 export const Authenticate = () => {
   const [email, setEmail] = useState("");
@@ -45,7 +46,19 @@ export const Authenticate = () => {
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredentials = await signInWithPopup(auth, googleProvider);
+      const userRef = doc(db, "users", userCredentials.user.uid);
+      const docSnapshot = await getDoc(userRef);
+
+      if (!docSnapshot.exists()) {
+        await setDoc(userRef, {
+          name: userCredentials.user.displayName,
+          email: userCredentials.user.email,
+          likedPosts: [],
+          userId: userCredentials.user.uid,
+        });
+      }
+
       toast.success(
         auth.currentUser.displayName
           ? `Welcome ${auth.currentUser.displayName}!`
