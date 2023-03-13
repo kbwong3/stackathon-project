@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { auth, db } from "../config/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 
 export const CreatePost = (props) => {
   const [post, setPost] = useState("");
@@ -18,6 +25,7 @@ export const CreatePost = (props) => {
         user: auth.currentUser.displayName,
         userId: auth.currentUser?.uid,
         likes: 0,
+        timeStamp: serverTimestamp(),
       });
       getPostList();
       setPost("");
@@ -28,32 +36,46 @@ export const CreatePost = (props) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h1> MAKE POST </h1>
-        <input
-          value={post}
-          onChange={(e) => setPost(e.target.value)}
-          className="postbox"
-          placeholder="Start a post"
-          type="text"
-        />
-        <div>
-          <label>Mood: {mood} </label>
-          <div>
-            <label>Mood: 1(sad) to 5(happy) </label>
-            <input
-              type="range"
-              value={mood}
-              onChange={(e) => setMood(e.target.value)}
-              min="1"
-              max="5"
-            ></input>
-          </div>
-        </div>
-
-        <button type="submit">Post</button>
-      </form>
+    <div className="make-post pr-4">
+      <Container>
+        <h3> How are you feeling today? </h3>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Control
+              value={post}
+              onChange={(e) => setPost(e.target.value)}
+              placeholder="Start a post"
+              as="textarea"
+              rows={5}
+            />
+            <div>
+              <Row>
+                <Col lg={10}>
+                  <Form.Label>Mood: {mood} </Form.Label>
+                  <div>
+                    <Form.Label>Mood meter: 1(sad) to 5(happy) </Form.Label>
+                  </div>
+                </Col>
+                <Col xs={2}>
+                  <Button className="mt-3" type="submit">
+                    Post
+                  </Button>
+                </Col>
+              </Row>
+              <div>
+                <Form.Range
+                  type="range"
+                  value={mood}
+                  onChange={(e) => setMood(e.target.value)}
+                  min="1"
+                  max="5"
+                  variant="dark"
+                />
+              </div>
+            </div>
+          </Form.Group>
+        </Form>
+      </Container>
     </div>
   );
 };

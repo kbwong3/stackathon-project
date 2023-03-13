@@ -4,6 +4,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { authErrors } from "./authErrors";
 import { getDoc, doc, setDoc } from "firebase/firestore";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { Link } from "react-router-dom";
 
 export const Authenticate = () => {
   const [email, setEmail] = useState("");
@@ -56,6 +62,7 @@ export const Authenticate = () => {
           email: userCredentials.user.email,
           likedPosts: [],
           userId: userCredentials.user.uid,
+          photoUrl: userCredentials.user.photoURL,
         });
       }
 
@@ -92,17 +99,54 @@ export const Authenticate = () => {
   };
 
   return (
-    <div>
-      <input onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-      <input
-        placeholder="Password"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={signIn}>Sign In</button>
-      <div>
-        <button onClick={signInWithGoogle}>Sign in with Google </button>
-      </div>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+          <Form>
+            <Form.Group>
+              <Form.Label> Email</Form.Label>
+              <Form.Control
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+
+              <Form.Label> Password</Form.Label>
+              <Form.Control
+                placeholder="Password"
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Col>
+        <Col></Col>
+      </Row>
+      <Row>
+        <Col>
+          <Link to="/">
+            <Button className="mt-4" onClick={signIn}>
+              Sign In
+            </Button>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/">
+            <Button
+              variant="outline-dark"
+              className="mt-4 pr-3"
+              onClick={signInWithGoogle}
+            >
+              <img
+                className="google"
+                alt=""
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg "
+              />{" "}
+              Sign in with Google{" "}
+            </Button>
+          </Link>
+        </Col>
+        <Col></Col>
+      </Row>
+    </Container>
   );
 };

@@ -4,6 +4,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { authErrors } from "./authErrors";
 import { setDoc, doc } from "firebase/firestore";
+import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export const Signup = () => {
   const [email, setEmail] = useState("");
@@ -31,6 +37,7 @@ export const Signup = () => {
         email: email,
         likedPosts: [],
         userId: auth.currentUser.uid,
+        photoUrl: userCredential.user.photoURL,
       });
 
       toast.success(
@@ -69,20 +76,35 @@ export const Signup = () => {
 
   return (
     <div>
-      <form onSubmit={handleSignUp}>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          value={password}
-          placeholder="Password"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Sign up</button>
-      </form>
+      <Container>
+        <Row>
+          <Col>
+            <Form onSubmit={handleSignUp}>
+              <Form.Group>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  value={password}
+                  placeholder="Password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Link to="/">
+                  <Button className="mt-4" type="submit">
+                    Sign up
+                  </Button>
+                </Link>
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col></Col>
+        </Row>
+      </Container>
     </div>
   );
 };

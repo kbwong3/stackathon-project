@@ -1,5 +1,6 @@
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import Button from "react-bootstrap/Button";
 
 export const DeletePost = (props) => {
   const getPostList = props.getPostList;
@@ -15,5 +16,9 @@ export const DeletePost = (props) => {
     }
   };
 
-  return <button onClick={() => deletePost(id)}>Delete Post</button>;
+  return (
+    <Button variant="danger" onClick={() => deletePost(id)}>
+      Delete Post
+    </Button>
+  );
 };
